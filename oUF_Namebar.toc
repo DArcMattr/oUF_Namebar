@@ -1,0 +1,8 @@
+## Interface: 40200
+## Title: oUF_Namebar
+## Author: DArc, based on Haste
+## Version: 0.0.1
+## X-oUF: oUF_Namebar
+## Notes: Namebar element
+
+namebar.lua
