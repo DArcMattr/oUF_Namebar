@@ -1,8 +1,9 @@
 ## Interface: 40200
 ## Title: oUF_Namebar
-## Author: DArc, based on Haste
+## Author: DArc, based on Haste's healthbar code
 ## Version: 0.0.1
 ## X-oUF: oUF_Namebar
+## RequiredDeps: oUF
 ## Notes: Namebar element
 
 namebar.lua
