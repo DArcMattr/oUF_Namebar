@@ -1,5 +1,7 @@
-local parent, ns = ...
-local oUF = ns.oUF
+local parent = debugstack():match[[\AddOns\(.-)\]]
+local global = GetAddOnMetadata(parent, 'X-oUF')
+local oUF = _G[global] or oUF
+assert(oUF, 'oUF not loaded')
 
 local Update = function(self, event, unit, powerType)
   if(self.unit ~= unit) then return end
