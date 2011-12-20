@@ -17,16 +17,18 @@ local Update = function(self, event, unit, powerType)
 
   local r, g, b, t
   if(namebar.colorTapping and UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then
-    t = self.colors.tapped
+    t = oUF.colors.tapped
   elseif(namebar.colorDisconnected and not UnitIsConnected(unit)) then
-    t = self.colors.disconnected
+    t = oUF.colors.disconnected
   elseif(namebar.colorClass and UnitIsPlayer(unit)) or
     (namebar.colorClassNPC and not UnitIsPlayer(unit)) or
     (namebar.colorClassPet and UnitPlayerControlled(unit) and not UnitIsPlayer(unit)) then
     local _, class = UnitClass(unit)
-    t = self.colors.class[class]
+    t = oUF.colors.class[class]
   elseif(namebar.colorReaction and UnitReaction(unit, 'player')) then
-    t = self.colors.reaction[UnitReaction(unit, "player")]
+    t = oUF.colors.reaction[UnitReaction(unit, "player")]
+  else
+    -- nuffin'
   end
 
   if(t) then
@@ -62,6 +64,7 @@ local Enable = function(self, unit)
     namebar.ForceUpdate = ForceUpdate
 
     self:RegisterEvent('UNIT_CONNECTION', Path)
+    self:RegisterEvent('PLAYER_TARGET_CHANGED', Path)
 
     -- For tapping.
     self:RegisterEvent('UNIT_FACTION', Path)
