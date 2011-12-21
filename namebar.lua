@@ -3,13 +3,11 @@ local global = GetAddOnMetadata(parent, 'X-oUF')
 local oUF = _G[global] or oUF
 assert(oUF, 'oUF not loaded')
 
-local Update = function(self, event, unit, powerType)
-  if(self.unit ~= unit) then return end
-  local namebar = self.namebar
-
-  if(namebar.PreUpdate) then
-    namebar:PreUpdate(unit)
+local Update = function( self, event, unit )
+  if(self.unit ~= unit) then 
+    return 
   end
+  local namebar = self.Namebar
 
   local disconnected = not UnitIsConnected(unit)
 
@@ -45,12 +43,12 @@ local Update = function(self, event, unit, powerType)
   end
 
   if(namebar.PostUpdate) then
-    return namebar:PostUpdate(unit, min, max)
+    return namebar:PostUpdate(self, unit)
   end
 end
 
 local Path = function(self, ...)
-  return (self.namebar.Override or Update) (self, ...)
+  return (self.Namebar.Override or Update) (self, ...)
 end
 
 local ForceUpdate = function(element)
@@ -58,16 +56,16 @@ local ForceUpdate = function(element)
 end
 
 local Enable = function(self, unit)
-  local namebar = self.namebar
+  local namebar = self.Namebar
   if(namebar) then
     namebar.__owner = self
     namebar.ForceUpdate = ForceUpdate
+    namebar.Update = Update
 
     self:RegisterEvent('UNIT_CONNECTION', Path)
     self:RegisterEvent('PLAYER_TARGET_CHANGED', Path)
-
-    -- For tapping.
-    self:RegisterEvent('UNIT_FACTION', Path)
+    self:RegisterEvent('UNIT_NAME_UPDATE', Path)
+    self:RegisterEvent('UNIT_FACTION', Path) -- For tapping.
 
     if(namebar:IsObjectType'StatusBar' and not namebar:GetStatusBarTexture()) then
       namebar:SetStatusBarTexture[[Interface\TargetingFrame\UI-StatusBar]]
@@ -80,8 +78,9 @@ end
 local Disable = function(self)
   local namebar = self.namebar
   if(namebar) then
-    self:UnregisterEvent('UNIT_NAME_UPDATE', Path)
     self:UnregisterEvent('UNIT_CONNECTION', Path)
+    self:RegisterEvent('PLAYER_TARGET_CHANGED', Path)
+    self:UnregisterEvent('UNIT_NAME_UPDATE', Path)
     self:UnregisterEvent('UNIT_FACTION', Path)
   end
 end
