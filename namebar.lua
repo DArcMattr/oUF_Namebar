@@ -13,7 +13,7 @@ local Update = function( self, event, unit )
 
   namebar.disconnected = disconnected
 
-  local r, g, b, t
+  local r, g, b, a, t
   if(namebar.colorTapping and UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then
     t = oUF.colors.tapped
   elseif(namebar.colorDisconnected and not UnitIsConnected(unit)) then
@@ -30,15 +30,19 @@ local Update = function( self, event, unit )
   end
 
   if(t) then
-    r, g, b = t[1], t[2], t[3]
+    r, g, b, a = t[1], t[2], t[3], t[4]
+  end
+
+  if a == nil then 
+    a = 1
   end
 
   if(b) then
-    namebar:SetStatusBarColor(r, g, b)
+    namebar:SetStatusBarColor(r, g, b, a)
 
     local bg = namebar.bg
     if(bg) then local mu = bg.multiplier or 1
-      bg:SetVertexColor(r * mu, g * mu, b * mu)
+      bg:SetVertexColor(r * mu, g * mu, b * mu, a * mu)
     end
   end
 
